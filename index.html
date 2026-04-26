@@ -467,60 +467,70 @@ footer{
 <script>
 const heroBg = document.getElementById("heroBg");
 const bgSrc = heroBg.dataset.src;
+const loader = document.getElementById("loader");
 
+/* preload hero background image */
 const preloadBg = new Image();
 preloadBg.src = bgSrc;
+preloadBg.fetchPriority = "high";
+preloadBg.decoding = "async";
 
 preloadBg.onload = () => {
   heroBg.style.backgroundImage = `url('${bgSrc}')`;
   heroBg.classList.add("loaded");
-};
 
-function loadHeroBackground() {
-  const img = new Image();
-  img.fetchPriority = "high";
-  img.decoding = "async";
-  img.src = bgSrc;
-
-  img.onload = () => {
-    heroBg.style.backgroundImage = `url('${bgSrc}')`;
-    heroBg.classList.add("loaded");
-  };
-}
-
-window.addEventListener("DOMContentLoaded", () => {
-  loadHeroBackground();
-});
-
-window.addEventListener("load", () => {
-  gsap.to("#loader", {
+  /* hide loader only after image becomes visible */
+  gsap.to(loader, {
     opacity: 0,
     duration: 1,
-    delay: 0.3,
+    delay: 0.4,
     ease: "power2.out",
     onComplete: () => {
-      document.getElementById("loader").style.display = "none";
+      loader.style.display = "none";
     }
   });
-});
+};
+
+/* fallback if image fails */
+preloadBg.onerror = () => {
+  gsap.to(loader, {
+    opacity: 0,
+    duration: 0.8,
+    onComplete: () => {
+      loader.style.display = "none";
+    }
+  });
+};
+
 gsap.registerPlugin(ScrollTrigger);
 
-document.querySelectorAll(".flip-card").forEach(card=>{
+document.querySelectorAll(".flip-card").forEach(card => {
   ScrollTrigger.create({
-    trigger:card,
-    start:"top 85%",
-    onEnter:()=>card.classList.add("manual-flip")
+    trigger: card,
+    start: "top 85%",
+    onEnter: () => card.classList.add("manual-flip")
   });
 
-  card.addEventListener("click",()=>{
+  card.addEventListener("click", () => {
     card.classList.toggle("manual-flip");
   });
 });
 
-const modal=document.getElementById("inviteModal");
-document.getElementById("openInvite").onclick=()=>modal.classList.add("show");
-document.getElementById("closeInvite").onclick=()=>modal.classList.remove("show");
-modal.onclick=e=>{ if(e.target===modal) modal.classList.remove("show"); };
+const modal = document.getElementById("inviteModal");
+
+document.getElementById("openInvite").onclick = () => {
+  modal.classList.add("show");
+};
+
+document.getElementById("closeInvite").onclick = () => {
+  modal.classList.remove("show");
+};
+
+modal.onclick = e => {
+  if (e.target === modal) {
+    modal.classList.remove("show");
+  }
+};
 </script>
 
 </body>
