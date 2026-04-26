@@ -476,6 +476,22 @@ preloadBg.onload = () => {
   heroBg.classList.add("loaded");
 };
 
+function loadHeroBackground() {
+  const img = new Image();
+  img.fetchPriority = "high";
+  img.decoding = "async";
+  img.src = bgSrc;
+
+  img.onload = () => {
+    heroBg.style.backgroundImage = `url('${bgSrc}')`;
+    heroBg.classList.add("loaded");
+  };
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+  loadHeroBackground();
+});
+
 window.addEventListener("load", () => {
   gsap.to("#loader", {
     opacity: 0,
