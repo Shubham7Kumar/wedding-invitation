@@ -469,17 +469,17 @@ const heroBg = document.getElementById("heroBg");
 const bgSrc = heroBg.dataset.src;
 const loader = document.getElementById("loader");
 
-/* preload hero background image */
-const preloadBg = new Image();
-preloadBg.src = bgSrc;
-preloadBg.fetchPriority = "high";
-preloadBg.decoding = "async";
+/* load hero background immediately */
+const heroImage = new Image();
+heroImage.fetchPriority = "high";
+heroImage.decoding = "async";
+heroImage.src = bgSrc;
 
-preloadBg.onload = () => {
+heroImage.onload = () => {
   heroBg.style.backgroundImage = `url('${bgSrc}')`;
   heroBg.classList.add("loaded");
 
-  /* hide loader only after image becomes visible */
+  /* hide loader after image appears */
   gsap.to(loader, {
     opacity: 0,
     duration: 1,
@@ -492,7 +492,7 @@ preloadBg.onload = () => {
 };
 
 /* fallback if image fails */
-preloadBg.onerror = () => {
+heroImage.onerror = () => {
   gsap.to(loader, {
     opacity: 0,
     duration: 0.8,
@@ -518,18 +518,11 @@ document.querySelectorAll(".flip-card").forEach(card => {
 
 const modal = document.getElementById("inviteModal");
 
-document.getElementById("openInvite").onclick = () => {
-  modal.classList.add("show");
-};
-
-document.getElementById("closeInvite").onclick = () => {
-  modal.classList.remove("show");
-};
+document.getElementById("openInvite").onclick = () => modal.classList.add("show");
+document.getElementById("closeInvite").onclick = () => modal.classList.remove("show");
 
 modal.onclick = e => {
-  if (e.target === modal) {
-    modal.classList.remove("show");
-  }
+  if (e.target === modal) modal.classList.remove("show");
 };
 </script>
 
