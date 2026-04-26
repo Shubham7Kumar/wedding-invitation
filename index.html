@@ -6,6 +6,8 @@
 <title>शुभ विवाह निमंत्रण</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Devanagari:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="./images/ganesh.jpg">
+<link rel="preload" as="image" href="./images/image.jpg">
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r160/three.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
@@ -66,7 +68,7 @@ body{
   background-position:center;
   opacity:0;
   transform:scale(1.08);
-  transition:2s ease;
+  transition:.8s ease;
 }
 
 .hero-bg.loaded{
@@ -381,7 +383,7 @@ footer{
 </div>
 
 <section class="hero">
-  <div class="hero-bg" id="heroBg"></div>
+  <<div class="hero-bg" id="heroBg" data-src="./images/ganesh.jpg"></div>
   <canvas id="bg"></canvas>
 
   <div class="hero-content">
@@ -392,7 +394,7 @@ footer{
     <p>हमारे शुभ विवाह समारोह में आपकी स्नेहमयी उपस्थिति का सादर आमंत्रण</p>
 
     <div class="image-frame">
-      <img src="./images/image.jpg" alt="विवाह">
+      <img src="./images/image.jpg" fetchpriority="high" decoding="async" alt="विवाह">
     </div>
 
     <button class="accept-btn" id="openInvite">✨ आमंत्रण स्वीकार करें</button>
@@ -463,15 +465,28 @@ footer{
 </div>
 
 <script>
-window.addEventListener("load",()=>{
-  gsap.to("#loader",{
-    opacity:0,
-    duration:1.2,
-    delay:1,
-    onComplete:()=>document.getElementById("loader").style.display="none"
+const heroBg = document.getElementById("heroBg");
+const bgSrc = heroBg.dataset.src;
+
+const preloadBg = new Image();
+preloadBg.src = bgSrc;
+
+preloadBg.onload = () => {
+  heroBg.style.backgroundImage = `url('${bgSrc}')`;
+  heroBg.classList.add("loaded");
+};
+
+window.addEventListener("load", () => {
+  gsap.to("#loader", {
+    opacity: 0,
+    duration: 1.4,
+    delay: 1.2,
+    ease: "power2.out",
+    onComplete: () => {
+      document.getElementById("loader").style.display = "none";
+    }
   });
 });
-
 gsap.registerPlugin(ScrollTrigger);
 
 document.querySelectorAll(".flip-card").forEach(card=>{
